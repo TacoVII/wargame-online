@@ -1,0 +1,3 @@
+【專案資料同步規則】
+1. 本專案的共用部隊數值由「units_data.xlsx」與「units_data.js」共同維護；各劇本的初始部署由對應的劇本資料包維護。
+2. 只要我修改了 units_data.xlsx 的內容並請你同步，請讀取最新的 units_data.xlsx 兩張工作表，完整更新 units_data.js 內的 UNIT_TYPES，以及 scenarios/scenario_Second_Italo-Ethiopian_War_1935.js 和 scenarios/scenario_tutorial.js 內對應的 roster，確保各表中的部隊 ID、名稱、編制、軍標、攻防移數值與部署座標 (c, r) 100% 一致。

@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>義大利—衣索比亞戰爭：經典桌面六角格兵棋</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Noto+Serif+TC:wght@500;700;900&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="w-screen h-screen overflow-hidden flex items-stretch justify-between p-2 gap-2">
+
+  <!-- ===================================================================== -->
+  <!-- 左側面板 (~300px)：戰役檔案、後勤配額、教學步驟與結束回合               -->
+  <!-- ===================================================================== -->
+  <aside class="w-[300px] shrink-0 h-full dossier-panel flex flex-col overflow-hidden">
+    <div class="bg-[#2d3b32] text-[#f2e8cf] px-3.5 py-3 border-b-2 border-[#b5892e]">
+      <div class="flex items-center justify-between gap-2">
+        <span id="sb-era-badge" class="px-2 py-0.5 bg-[#b5892e] text-[#1c1814] font-typewriter font-bold text-xs tracking-wider border border-[#1c1814]">
+          1935–1936 戰役
+        </span>
+        <span id="sb-date-label" class="font-typewriter text-sm text-[#e8c670] font-bold">
+          35年10月上
+        </span>
+      </div>
+      <h1 id="sb-campaign-title" class="font-special text-lg tracking-wide mt-2 text-[#f7efe0] leading-snug">
+        第二次義衣戰爭
+      </h1>
+      <div class="mt-2.5 flex items-center justify-between text-xs bg-[#1e2922] px-2.5 py-1.5 border border-[#5a6e60]">
+        <span class="text-[#c8bda3] font-serif-classic">指揮陣營：</span>
+        <span id="sb-faction-pill" class="font-typewriter font-bold text-[#9fd1a8] text-sm">🇮🇹 義大利王國</span>
+      </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-3 space-y-3">
+      <div class="dossier-subbox p-2.5">
+        <div class="flex items-center justify-between border-b border-[#8c7853] pb-1 mb-2">
+          <span class="font-typewriter font-bold text-sm text-[#2d3b32]">■ 回合進度</span>
+          <span id="sb-turn-counter" class="font-typewriter font-bold text-sm text-[#8f1d1d]">T1 / 14</span>
+        </div>
+        <div id="sb-turn-track" class="turn-track-grid" role="list" aria-label="回合進度軌"></div>
+        <div class="flex items-center justify-between mt-2 text-xs font-typewriter">
+          <span class="flex items-center gap-1"><i class="turn-track-key current"></i>目前回合</span>
+          <span class="flex items-center gap-1"><i class="turn-track-key final"></i><span id="sb-turn-track-final-label">雨季回合</span></span>
+        </div>
+        <p id="sb-victory-hint" class="border-t border-[#8c7853] pt-1.5 mt-2 text-[14px] text-[#1c1814] leading-relaxed">
+          我軍需在雨季開始前攻佔衣方首都阿迪斯阿貝巴。
+        </p>
+      </div>
+
+      <div id="war-escalation-box" class="hidden dossier-subbox p-2.5 space-y-1.5">
+        <div class="flex items-center justify-between border-b border-[#8c7853] pb-1">
+          <span class="font-typewriter font-bold text-sm tracking-wider text-[#2d3b32]">■ 戰爭態勢</span>
+          <span id="war-escalation-level" class="font-typewriter font-bold text-sm text-[#8f1d1d]">Lv.1 / 10</span>
+        </div>
+        <div id="war-escalation-track" class="grid grid-cols-5 gap-1" role="list" aria-label="戰爭態勢進度軌">
+          <span role="listitem" aria-label="Lv.1" class="war-escalation-cell">I</span>
+          <span role="listitem" aria-label="Lv.2" class="war-escalation-cell">II</span>
+          <span role="listitem" aria-label="Lv.3" class="war-escalation-cell">III</span>
+          <span role="listitem" aria-label="Lv.4" class="war-escalation-cell">IV</span>
+          <span role="listitem" aria-label="Lv.5" class="war-escalation-cell">V</span>
+          <span role="listitem" aria-label="Lv.6" class="war-escalation-cell">VI</span>
+          <span role="listitem" aria-label="Lv.7" class="war-escalation-cell">VII</span>
+          <span role="listitem" aria-label="Lv.8" class="war-escalation-cell">VIII</span>
+          <span role="listitem" aria-label="Lv.9" class="war-escalation-cell">IX</span>
+          <span role="listitem" aria-label="Lv.10" class="war-escalation-cell">X</span>
+        </div>
+        <p id="war-escalation-effect" class="text-xs text-[#2b241c] leading-relaxed">局勢尚未升級，無額外效果。</p>
+      </div>
+
+      <div class="dossier-subbox p-2.5">
+        <div class="font-typewriter font-bold text-sm tracking-wider text-[#2d3b32] border-b border-[#8c7853] pb-1 mb-2">
+          ■ 司令部後勤與特種支援配額
+        </div>
+        <div id="sb-resources-box" class="grid grid-cols-2 gap-2 text-center"></div>
+      </div>
+
+      <div id="tutorial-guide-card" class="hidden bg-[#2d3b32] text-[#f2e8cf] border-2 border-[#8f1d1d] p-3 space-y-2 shadow-md">
+        <div class="flex items-center justify-between border-b border-[#5a6e60] pb-1.5">
+          <span class="font-typewriter font-bold text-sm text-[#e8c670]">● 實戰演習教範</span>
+          <span id="tut-step-badge" class="font-typewriter text-xs bg-[#8f1d1d] text-[#f7efe0] font-bold px-2 py-0.5 border border-[#1c1814]">1 / 3</span>
+        </div>
+        <h4 id="tut-step-title" class="font-typewriter font-bold text-sm text-[#f7efe0]">步驟 1：選取與沿路機動</h4>
+        <p id="tut-step-desc" class="text-[14px] text-[#e6dec8] leading-relaxed">
+          點擊地圖上紅色蠟筆圈選的【第30薩包達步兵師】，再順著紅色蠟筆箭頭點擊南側公路格。
+        </p>
+        <div id="tut-progress-dots" class="grid grid-cols-3 gap-1.5 pt-1">
+          <span class="h-2 bg-[#b5892e] border border-[#1c1814]"></span>
+          <span class="h-2 bg-[#1e2922] border border-[#5a6e60]"></span>
+          <span class="h-2 bg-[#1e2922] border border-[#5a6e60]"></span>
+        </div>
+      </div>
+
+      <div class="dossier-subbox p-2.5 text-[14px] text-[#2b241c] space-y-1.5 leading-snug">
+        <div class="font-typewriter font-bold text-sm text-[#2d3b32] border-b border-[#8c7853] pb-1">■ 野戰操作要領</div>
+        <div>• <b>左鍵點選</b>：選取算子、沿路推進或攻擊紅框敵軍。</div>
+        <div>• <b>右鍵點擊</b>：取消目前選取的算子與高亮範圍。</div>
+        <div>• <b>滾輪／拖曳</b>：以游標為中心縮放與平移戰區圖版。</div>
+        <div>• <b>同格疊放</b>：每格上限 2 單位，重複點擊可切換。</div>
+      </div>
+    </div>
+
+    <div class="p-3 bg-[#c4b087] border-t-2 border-[#2d3b32]">
+      <div id="sb-phase-status" class="text-center font-typewriter text-sm font-bold text-[#2d3b32] mb-2">
+        [ 狀態：玩家機動與總攻階段 ]
+      </div>
+      <button id="btn-end-turn" onclick="endPlayerTurn()" class="mil-btn w-full py-2.5 px-4 bg-[#8f1d1d] hover:bg-[#a62424] text-[#f4ebd9] font-typewriter font-bold text-base tracking-wider flex items-center justify-center gap-2">
+        <span>結束本回合調動</span>
+        <span>▶</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===================================================================== -->
+  <!-- 中央戰場視口：全高度六角格兵棋畫布與骰子結算彈窗                        -->
+  <!-- ===================================================================== -->
+  <main class="flex-1 h-full flex items-center justify-center overflow-hidden relative">
+    <div id="map-viewport-frame" class="w-full h-full relative overflow-hidden">
+      <canvas id="wargame-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+
+      <div class="absolute top-2.5 right-2.5 z-20 flex items-center bg-[#d4c39f] border-2 border-[#2d3b32] shadow-md">
+        <button onclick="zoomByFactor(1.22)" class="w-8 h-8 bg-[#dfd0b0] hover:bg-[#cbb892] border-r border-[#594a36] font-typewriter font-bold text-base flex items-center justify-center" title="放大地圖">＋</button>
+        <span id="zoom-readout" class="font-typewriter font-bold text-xs px-2 min-w-[50px] text-center bg-[#d4c39f]">100%</span>
+        <button onclick="zoomByFactor(0.82)" class="w-8 h-8 bg-[#dfd0b0] hover:bg-[#cbb892] border-l border-r border-[#594a36] font-typewriter font-bold text-base flex items-center justify-center" title="縮小地圖">－</button>
+        <button onclick="resetView()" class="px-2.5 h-8 bg-[#2d3b32] hover:bg-[#3b4d42] text-[#f2e8cf] font-typewriter font-bold text-xs" title="重置縮放填滿視窗">重置</button>
+      </div>
+
+      <!-- 戰術交戰與 1D6 擲骰結算視窗 -->
+      <div id="combat-modal" class="hidden absolute inset-0 bg-black/65 z-30 flex items-center justify-center p-4">
+        <div class="dossier-panel border-4 border-[#1c1814] w-full max-w-[510px] overflow-hidden text-[#1c1814]">
+          <div class="bg-[#2d3b32] text-[#e8c670] px-4 py-2.5 flex items-center justify-between border-b-2 border-[#b5892e]">
+            <span class="font-typewriter font-bold text-base tracking-wider">⚔ 戰術交戰與擲骰結算</span>
+            <span id="cmb-loc-badge" class="text-xs font-typewriter bg-[#1e2922] text-[#f2e8cf] px-2 py-0.5 border border-[#8c7853]">阿杜瓦 · I05</span>
+          </div>
+
+          <div class="p-4 space-y-3">
+            <div class="grid grid-cols-11 items-center gap-2 dossier-subbox p-3">
+              <div class="col-span-5 flex flex-col items-center text-center">
+                <span class="font-typewriter text-xs font-bold px-2 py-0.5 bg-[#2d4a34] text-[#f2e8cf] border border-[#1c1814] mb-1.5" id="cmb-atk-side-tag">進攻方</span>
+                <canvas id="cmb-atk-canvas" width="58" height="58" class="mb-1.5"></canvas>
+                <div id="cmb-atk-name" class="font-serif-classic font-bold text-sm leading-tight line-clamp-1">第1軍團</div>
+                <div class="font-typewriter text-sm mt-0.5">總攻力：<b id="cmb-atk-val" class="text-lg text-[#2d4a34]">6</b></div>
+              </div>
+
+              <div class="col-span-1 flex flex-col items-center justify-center">
+                <span class="font-special text-base font-bold text-[#8f1d1d]">VS</span>
+              </div>
+
+              <div class="col-span-5 flex flex-col items-center text-center">
+                <span class="font-typewriter text-xs font-bold px-2 py-0.5 bg-[#8f1d1d] text-[#f2e8cf] border border-[#1c1814] mb-1.5" id="cmb-def-side-tag">防禦方</span>
+                <canvas id="cmb-def-canvas" width="58" height="58" class="mb-1.5"></canvas>
+                <div id="cmb-def-name" class="font-serif-classic font-bold text-sm leading-tight line-clamp-1">提格雷大軍</div>
+                <div class="font-typewriter text-sm mt-0.5">總防力：<b id="cmb-def-val" class="text-lg text-[#8f1d1d]">4</b></div>
+              </div>
+            </div>
+
+            <div class="space-y-2 bg-[#c4b087] border border-[#594a36] px-3 py-2 text-sm">
+              <div class="flex items-center justify-between">
+                <span class="font-serif-classic">戰力比欄位：</span>
+                <b id="cmb-ratio-text" class="font-typewriter text-base text-[#8f1d1d]">2 : 1</b>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <section id="cmb-atk-breakdown" aria-label="進攻方戰力明細" class="border border-[#594a36] bg-[#d7c6a5] px-2 py-1.5 font-typewriter font-bold leading-relaxed whitespace-pre-line">
+                  進攻方修正明細
+                  部隊基礎攻擊：+0
+                  地形修正：+0
+                  圍攻加成：+0
+                </section>
+                <section id="cmb-def-breakdown" aria-label="防禦方戰力明細" class="border border-[#594a36] bg-[#d7c6a5] px-2 py-1.5 font-typewriter font-bold leading-relaxed whitespace-pre-line">
+                  防禦方修正明細
+                  部隊基礎防禦：+0
+                  地形防禦修正（水域）：+0
+                </section>
+              </div>
+            </div>
+
+            <div id="cmb-pre-controls" class="space-y-3">
+              <div id="cmb-gas-box" class="hidden bg-[#d4dfd5] border-2 border-[#2d3b32] p-2.5 text-sm">
+                <label class="flex items-center justify-between cursor-pointer gap-2">
+                  <span class="font-bold text-[#1c2b21] flex items-center gap-2">
+                    <input type="checkbox" id="chk-cmb-gas" onchange="recalcCombatPreview()" class="w-4 h-4 accent-[#2d3b32]" />
+                    <span>投入芥子毒氣支援，耗 1 配額</span>
+                  </span>
+                  <span class="font-typewriter font-bold text-xs text-[#8f1d1d]">+2攻 / 雙倍傷亡</span>
+                </label>
+              </div>
+              <div class="flex items-center justify-end gap-2.5">
+                <button onclick="closeCombatModal()" class="mil-btn px-4 py-2 bg-[#c4b087] text-[#1c1814] font-typewriter font-bold text-sm">取消進攻</button>
+                <button onclick="startDiceRollSequence()" class="mil-btn px-5 py-2 bg-[#8f1d1d] text-[#f2e8cf] font-typewriter font-bold text-base">
+                  🎲 擲骰發動總攻！
+                </button>
+              </div>
+            </div>
+
+            <div id="cmb-roll-stage" class="hidden space-y-3">
+              <div class="flex items-center gap-4 bg-[#2d3b32] text-[#f2e8cf] p-3 border-2 border-[#b5892e]">
+                <div class="shrink-0 flex flex-col items-center die-perspective">
+                  <div id="animated-die" class="w-16 h-16 bg-[#f7efe0] border-2 border-[#1c1814] shadow-lg flex items-center justify-center">
+                    <img id="die-face-img" src="./assets/dice/dice_1.svg" class="w-14 h-14 object-contain" alt="1D6 戰鬥骰" />
+                  </div>
+                  <span class="text-[11px] text-[#d4c39f] mt-1 font-typewriter">1D6 戰鬥骰</span>
+                </div>
+
+                <div class="flex-1">
+                  <div id="cmb-roll-status" class="text-sm text-[#e8c670] font-typewriter font-bold">正在擲出戰術骰子...</div>
+                  <div id="cmb-outcome-headline" class="font-special text-xl text-white mt-0.5">計算戰果中...</div>
+                  <p id="cmb-outcome-detail" class="text-sm text-[#e6dec8] mt-1 leading-snug">請稍候...</p>
+                </div>
+              </div>
+
+              <div class="overflow-hidden border-2 border-[#2d3b32]">
+                <table class="w-full text-center font-typewriter text-xs border-collapse">
+                  <thead class="bg-[#2d3b32] text-[#e8c670]">
+                    <tr>
+                      <th class="p-1.5 border border-[#5a6e60]">骰\比</th>
+                      <th class="p-1.5 border border-[#5a6e60]" id="crt-h-0">1:2</th>
+                      <th class="p-1.5 border border-[#5a6e60]" id="crt-h-1">1:1</th>
+                      <th class="p-1.5 border border-[#5a6e60]" id="crt-h-2">2:1</th>
+                      <th class="p-1.5 border border-[#5a6e60]" id="crt-h-3">3:1</th>
+                      <th class="p-1.5 border border-[#5a6e60]" id="crt-h-4">4:1+</th>
+                    </tr>
+                  </thead>
+                  <tbody id="mini-crt-body" class="bg-[#dfd0b0]"></tbody>
+                </table>
+              </div>
+
+              <div id="cmb-confirm-bar" class="hidden">
+                <button onclick="confirmCombatResolution()" class="mil-btn w-full py-2.5 bg-[#2d3b32] text-[#e8c670] font-typewriter font-bold text-base">
+                  確認戰果並繼續 ▶
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- 右側面板 (~315px)：檔案夾分頁、算子詳情卡與野戰電報紀錄                 -->
+  <!-- ===================================================================== -->
+  <aside class="w-[315px] shrink-0 h-full dossier-panel flex flex-col overflow-hidden">
+    <div class="bg-[#222222] pt-1.5 px-1.5 border-b-2 border-[#2d3b32] grid grid-cols-4 gap-1 text-xs font-typewriter font-bold">
+      <button onclick="openModal('modal-scenario')" class="folder-tab py-2 px-1 bg-[#b5892e] hover:bg-[#c79938] text-[#1c1814] text-center">
+        📁 戰役
+      </button>
+      <button onclick="openModal('modal-manual')" class="folder-tab py-2 px-1 bg-[#d4c39f] hover:bg-[#dfd0b0] text-[#1c1814] text-center">
+        📁 手冊
+      </button>
+      <button onclick="openEncyclopedia()" class="folder-tab py-2 px-1 bg-[#c4b087] hover:bg-[#d4c39f] text-[#1c1814] text-center">
+        📁 百科
+      </button>
+      <button onclick="toggleLayerFolder()" id="tab-layer-btn" class="folder-tab py-2 px-1 bg-[#c4b087] hover:bg-[#d4c39f] text-[#1c1814] text-center">
+        📁 圖層
+      </button>
+    </div>
+
+    <div id="layer-menu-box" class="hidden bg-[#dfd0b0] border-b-2 border-[#2d3b32] px-3 py-2.5 text-[14px] space-y-2">
+      <div class="font-typewriter font-bold text-xs text-[#2d3b32] border-b border-[#8c7853] pb-1">
+        ↳ 二級檔案夾：地圖印刷圖層控制
+      </div>
+      <label class="flex items-center justify-between cursor-pointer">
+        <span>六角格網格座標編號</span>
+        <input type="checkbox" id="chk-coords" checked onchange="renderBoard()" class="w-4 h-4 accent-[#2d3b32]" />
+      </label>
+      <label class="flex items-center justify-between cursor-pointer">
+        <span>SVG 歷史底圖（海岸與國界）</span>
+        <input type="checkbox" id="chk-borders" checked onchange="renderBoard()" class="w-4 h-4 accent-[#2d3b32]" />
+      </label>
+      <label class="flex items-center justify-between cursor-pointer">
+        <span>牛皮紙纖維紋理與摺痕</span>
+        <input type="checkbox" id="chk-paper" checked onchange="renderBoard()" class="w-4 h-4 accent-[#2d3b32]" />
+      </label>
+      <label class="flex items-center justify-between cursor-pointer">
+        <span>國家與勢力控制範圍</span>
+        <input type="checkbox" id="chk-territory" onchange="renderBoard()" class="w-4 h-4 accent-[#2d3b32]" />
+      </label>
+    </div>
+
+    <div class="h-[54px] flex flex-col justify-center bg-[#c4b087] border-b-2 border-[#594a36] px-3">
+      <div class="flex items-center justify-between gap-1">
+        <span class="font-typewriter font-bold text-sm text-[#1c1814] truncate" id="hover-hex-title">游標：請移至戰區地圖</span>
+        <div class="flex items-center gap-1 shrink-0">
+          <span id="hover-hex-def" class="font-typewriter text-xs px-1.5 py-0.5 bg-[#dfd0b0] border border-[#594a36] text-[#1c1814]">--</span>
+          <button id="hover-encyclopedia-btn" onclick="openSelectedHexEncyclopedia()" class="hidden font-typewriter text-xs px-1.5 py-0.5 bg-[#2d3b32] border border-[#1c1814] text-[#e8c670]">📖百科</button>
+        </div>
+      </div>
+      <div id="hover-odds-preview" class="font-typewriter text-xs text-[#8f1d1d] font-bold mt-1 hidden">
+        ⚔ 預估交戰比：2 : 1，點擊敵格進攻
+      </div>
+    </div>
+
+    <div id="right-unit-panel" class="min-h-[156px] flex flex-col justify-center border-b-2 border-[#2d3b32] p-3 bg-[#dfd0b0]">
+      <div id="unit-empty-hint" class="text-center py-4 text-[14px] text-[#4a3f31] leading-relaxed">
+        點擊地圖上的厚木塊兵牌算子<br/>檢視北約軍標、補給線與特種指令
+      </div>
+
+      <div id="unit-detail-content" class="hidden space-y-2.5">
+        <div class="flex items-center gap-3">
+          <canvas id="detail-nato-canvas" width="58" height="58" class="shrink-0"></canvas>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-1">
+              <h3 id="det-unit-name" class="font-serif-classic font-bold text-base text-[#1c1814] truncate flex-1 min-w-0">第30薩包達步兵師</h3>
+              <button id="det-unit-encyclopedia-btn" onclick="openSelectedUnitEncyclopedia()" class="shrink-0 font-typewriter text-xs px-1.5 py-0.5 bg-[#2d3b32] border border-[#1c1814] text-[#e8c670]">📖百科</button>
+            </div>
+            <div id="det-unit-sub" class="font-typewriter text-sm text-[#4a3f31] mt-0.5">阿斯馬拉 (H03) • 補給暢通</div>
+            <span id="det-stack-pill" class="hidden inline-block mt-1 font-typewriter text-sm font-bold px-2 py-0.5 bg-[#2d3b32] text-[#e8c670] border border-[#1c1814]">同格疊放 1/2</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-4 text-center bg-[#d4c39f] border-2 border-[#2d3b32] font-typewriter text-sm">
+          <div class="py-1.5"><span class="block text-sm text-[#4a3f31] font-serif-classic">攻擊力</span><b id="det-atk" class="text-base">5</b></div>
+          <div class="py-1.5 border-l border-[#594a36]"><span class="block text-sm text-[#4a3f31] font-serif-classic">防禦力</span><b id="det-def" class="text-base">5</b></div>
+          <div class="py-1.5 border-l border-[#594a36]"><span class="block text-sm text-[#4a3f31] font-serif-classic">移動力</span><b id="det-mp" class="text-base text-[#2d4a34]">4/4</b></div>
+          <div class="py-1.5 border-l border-[#594a36]"><span class="block text-sm text-[#4a3f31] font-serif-classic">補給</span><b id="det-sup" class="font-serif-classic text-sm text-[#2d4a34]">正常</b></div>
+        </div>
+
+        <div id="det-action-buttons" class="flex flex-col gap-1.5"></div>
+      </div>
+    </div>
+
+    <div class="flex-1 flex flex-col min-h-0 bg-[#d4c39f]">
+      <div class="bg-[#2d3b32] text-[#e8c670] px-3 py-1.5 border-b border-[#1c1814] flex items-center justify-between">
+        <span class="font-typewriter font-bold text-sm tracking-wider">■ 前線野戰電報紀錄</span>
+      </div>
+      <div id="log-list" class="flex-1 overflow-y-auto p-2.5 space-y-2 font-typewriter text-[16px]"></div>
+    </div>
+
+    <div id="fixed-legend-box" class="dossier-panel">
+      <div class="bg-[#2d3b32] text-[#e8c670] px-2.5 py-1.5 flex items-center justify-between border-b border-[#1c1814]">
+        <span class="font-typewriter font-bold text-sm tracking-wider">圖例</span>
+        <button id="btn-toggle-legend" onclick="toggleFixedLegend()" class="px-1.5 py-0.5 bg-[#1e2922] hover:bg-[#3b4d42] text-[#f2e8cf] font-typewriter text-sm border border-[#8c7853]">
+          收合 [－]
+        </button>
+      </div>
+      <div id="fixed-legend-body" class="p-2.5 space-y-2 text-[16px] bg-[#dfd0b0]">
+        <div class="grid grid-cols-2 gap-1.5">
+          <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 inline-block bg-[#7ea6b5] border border-[#1c1814]"></span>水域 禁行</div>
+          <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 inline-block border border-[#1c1814]" style="background: linear-gradient(135deg, #d4c39f 50%, #7ea6b5 50%);"></span>海岸 禁行</div>
+          <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 inline-block bg-[#d4c39f] border border-[#1c1814]"></span>草原/荒漠 1MP</div>
+          <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 inline-block bg-[#b0864e] border border-[#1c1814]"></span>高原 +1防</div>
+          <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 inline-block bg-[#805c3a] border border-[#1c1814]"></span>山地 +2防</div>
+          <div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 inline-block bg-[#57534e] border border-[#1c1814]"></span>城鎮 +2防</div>
+        </div>
+        <div class="border-t border-[#8c7853] pt-1.5 grid grid-cols-2 gap-x-2 gap-y-1 text-sm">
+          <div class="route-legend-item">
+            <svg viewBox="0 0 36 12" aria-hidden="true">
+              <line x1="2" y1="6" x2="34" y2="6" stroke="#1c1814" stroke-width="5" />
+              <line x1="2" y1="6" x2="34" y2="6" stroke="#f7efe0" stroke-width="2.2" stroke-dasharray="5 5" />
+            </svg>
+            <span>鐵路</span>
+          </div>
+          <div class="route-legend-item">
+            <svg viewBox="0 0 36 12" aria-hidden="true">
+              <line x1="2" y1="6" x2="34" y2="6" stroke="#1c1814" stroke-width="5" />
+              <line x1="2" y1="6" x2="34" y2="6" stroke="#f7efe0" stroke-width="2.2" />
+            </svg>
+            <span>公路</span>
+          </div>
+          <div class="route-legend-item">
+            <svg viewBox="0 0 36 12" aria-hidden="true">
+              <line x1="2" y1="6" x2="34" y2="6" stroke="#6b4c2a" stroke-width="2" stroke-dasharray="4 4" />
+            </svg>
+            <span>小徑</span>
+          </div>
+          <div class="route-legend-item">
+            <svg viewBox="0 0 36 12" aria-hidden="true">
+              <line x1="2" y1="6" x2="34" y2="6" stroke="#8f1d1d" stroke-width="2.2" stroke-dasharray="6 2.5 1.5 2.5" />
+            </svg>
+            <span>國界</span>
+          </div>
+        </div>
+        <div class="border-t border-[#8c7853] pt-1.5 flex items-center justify-between text-sm font-bold">
+          <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 inline-block bg-[#2d4a34] border border-[#1c1814]"></span>義大利軍團</span>
+          <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 inline-block bg-[#8f1d1d] border border-[#1c1814]"></span>衣索比亞軍</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===================================================================== -->
+  <!-- 彈窗 1：戰役劇本與陣營選擇                                            -->
+  <!-- ===================================================================== -->
+  <div id="modal-scenario" class="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4">
+    <div class="dossier-panel border-4 border-[#1c1814] max-w-[1260px] w-full p-6 text-[#1c1814] max-h-[95vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b-2 border-[#2d3b32] pb-3 mb-4">
+        <div>
+          <h2 class="font-special text-2xl sm:text-3xl mt-1 text-[#1c1814]">
+            戰役與陣營選擇
+          </h2>
+        </div>
+        <button onclick="closeModal('modal-scenario')" class="mil-btn px-4 py-2 bg-[#2d3b32] text-[#f2e8cf] font-typewriter text-sm font-bold">
+          關閉視窗
+        </button>
+      </div>
+
+      <div class="font-typewriter font-bold text-sm text-[#2d3b32] mb-2.5">
+        一、選擇作戰劇本：
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 mb-5">
+        <div onclick="selectSetupScenario('tutorial')" id="card-scen-tutorial" class="cursor-pointer border-2 border-[#2d3b32] bg-[#dfd0b0] p-4 flex flex-col justify-between transition">
+          <div>
+            <div class="flex items-center justify-between gap-1 mb-2">
+              <span class="font-typewriter text-xs font-bold px-2 py-0.5 bg-[#8f1d1d] text-[#f2e8cf] border border-[#1c1814]">教學關卡</span>
+              <span class="font-typewriter text-xs font-bold text-[#4a3f31]">3 步驟引導</span>
+            </div>
+            <h3 class="font-special text-xl text-[#1c1814] mb-2 leading-snug">阿杜瓦前線實戰演習</h3>
+            <p class="text-[14px] text-[#2b241c] leading-relaxed mb-3">
+              地圖上以<b>「紅色蠟筆手繪標識」</b>逐步引導：① 沿公路機動至 J05、② 工兵修築往阿杜瓦公路、③ 選取步兵或摩托化縱隊發動總攻並擲骰。
+            </p>
+          </div>
+          <div class="pt-2.5 border-t border-[#8c7853] flex items-center justify-between font-typewriter text-xs font-bold">
+            <span class="text-[#2d3b32]">模式：互動教學</span>
+            <span id="badge-scen-tutorial" class="px-2 py-0.5 bg-[#2d3b32] text-[#e8c670]">✓ 已選取</span>
+          </div>
+        </div>
+
+        <div onclick="selectSetupScenario('1935')" id="card-scen-1935" class="cursor-pointer border-2 border-[#594a36] bg-[#dfd0b0] p-4 flex flex-col justify-between transition">
+          <div>
+            <div class="flex items-center justify-between gap-1 mb-2">
+              <span class="font-typewriter text-xs font-bold px-2 py-0.5 bg-[#2d3b32] text-[#f2e8cf] border border-[#1c1814]">1935–1936</span>
+              <span class="font-typewriter text-xs font-bold text-[#4a3f31]">14 回合 • 全面戰爭</span>
+            </div>
+            <h3 class="font-special text-xl text-[#1c1814] mb-2 leading-snug">第二次義衣戰爭</h3>
+            <p class="text-[14px] text-[#2b241c] leading-relaxed mb-3">
+              南北雙線裝甲機械化夾擊、工兵修築公路、毒氣打擊與雨季倒數。衣軍則以近衛軍與山地游擊爆破拖延至五月雨季。
+            </p>
+          </div>
+          <div class="pt-2.5 border-t border-[#8c7853] flex items-center justify-between font-typewriter text-xs font-bold">
+            <span class="text-[#2d4a34]">焦點：修路補給與毒氣</span>
+            <span id="badge-scen-1935" class="text-[#594a36]">點擊選擇</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-[#c4b087] border-2 border-[#2d3b32] p-4">
+        <div class="font-typewriter font-bold text-sm text-[#1c1814] mb-2.5">
+          二、選擇指揮陣營：
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 mb-4">
+          <button onclick="selectSetupFaction('italy')" id="btn-fac-italy" class="text-left p-3.5 border-2 border-[#2d3b32] bg-[#d4dfd5] flex items-center justify-between">
+            <div>
+              <div class="font-special text-lg text-[#1c2b21]">🇮🇹 義大利王國</div>
+              <div class="text-[14px] text-[#2d3b32] mt-1">主動攻勢、工兵修築相鄰公路延伸補給線、芥子毒氣支援</div>
+            </div>
+            <span id="chk-fac-italy" class="px-3 py-1 bg-[#2d3b32] text-[#e8c670] font-typewriter font-bold text-sm border border-[#1c1814]">✓ 已選</span>
+          </button>
+
+          <button onclick="selectSetupFaction('ethiopia')" id="btn-fac-ethiopia" class="text-left p-3.5 border-2 border-[#594a36] bg-[#dfd0b0] flex items-center justify-between">
+            <div>
+              <div class="font-special text-lg text-[#7a1c1c]">🇪🇹 衣索比亞帝國軍</div>
+              <div class="text-[14px] text-[#4a2525] mt-1">依託險峻高原防禦、皇室近衛軍反擊、山地游擊隊爆破公路</div>
+            </div>
+            <span id="chk-fac-ethiopia" class="px-3 py-1 bg-[#c4b087] text-[#4a3f31] font-typewriter font-bold text-sm border border-[#594a36]">選擇</span>
+          </button>
+        </div>
+
+        <button onclick="launchSelectedScenario()" class="mil-btn w-full py-3.5 bg-[#8f1d1d] hover:bg-[#a62424] text-[#f2e8cf] font-typewriter font-bold text-lg tracking-widest">
+          ▶ 展開兵棋圖版並進入戰場指揮
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 彈窗 2：野戰兵棋規則與北約算子手冊                                      -->
+  <!-- ===================================================================== -->
+  <div id="modal-manual" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+    <div class="manual-dialog dossier-panel border-4 border-[#1c1814] max-w-4xl w-full h-[82vh] min-h-0 p-6 text-[#1c1814] flex flex-col overflow-hidden">
+      <div class="shrink-0 flex items-center justify-between border-b-2 border-[#2d3b32] pb-3 mb-4">
+        <h2 class="font-special text-2xl">野戰兵棋規則與軍標手冊</h2>
+        <button onclick="closeModal('modal-manual')" class="mil-btn px-4 py-1.5 bg-[#2d3b32] text-[#f2e8cf] font-typewriter text-sm font-bold">關閉</button>
+      </div>
+
+      <div class="shrink-0 flex flex-wrap gap-2 mb-4 border-b border-[#8c7853] pb-3 font-typewriter text-sm font-bold">
+        <button onclick="switchManualTab('rules')" id="tab-man-rules" class="px-4 py-1.5 bg-[#2d3b32] text-[#e8c670] border border-[#1c1814]">1. 機動、控制區與補給</button>
+        <button onclick="switchManualTab('crt')" id="tab-man-crt" class="px-4 py-1.5 bg-[#dfd0b0] text-[#1c1814] border border-[#594a36]">2. 戰鬥結果表 CRT</button>
+        <button onclick="switchManualTab('nato')" id="tab-man-nato" class="px-4 py-1.5 bg-[#dfd0b0] text-[#1c1814] border border-[#594a36]">3. 北約軍標圖鑑</button>
+        <button onclick="switchManualTab('war')" id="tab-man-war" class="hidden px-4 py-1.5 bg-[#dfd0b0] text-[#1c1814] border border-[#594a36]">4. 戰爭態勢</button>
+        <button onclick="switchManualTab('gas')" id="tab-man-gas" class="hidden px-4 py-1.5 bg-[#dfd0b0] text-[#1c1814] border border-[#594a36]">5. 毒氣戰</button>
+      </div>
+
+      <div class="manual-content flex-1 min-h-0 overflow-y-auto text-[15px] space-y-3 leading-relaxed pr-1">
+        <div id="man-rules" class="space-y-3">
+          <div class="dossier-subbox p-3.5 space-y-2">
+            <h4 class="font-typewriter font-bold text-[#8f1d1d]">■ 控制區 ZOC 與地形移動力</h4>
+            <p>• 部隊相鄰的 6 個六角格為其<b>控制區 ZOC</b>。進入敵軍控制區時必須立即停止移動；仍可於本回合發動總攻。</p>
+            <p>• 沿<b>相鄰鐵路或公路</b>移動每格僅耗 <b>1 MP</b>；草原／荒漠 1 MP，高原 2 MP，山地 3 MP。</p>
+            <svg viewBox="0 0 700 190" class="w-full h-auto block mt-3 mb-2 border border-[#594a36] bg-[#e6d9bc]" role="img" aria-label="控制區 ZOC 與地形移動力示意圖">
+              <defs>
+                <marker id="arrowGreen" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                  <polygon points="0 0, 7 3.5, 0 7" fill="#2d4a34"/>
+                </marker>
+                <marker id="arrowRed" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                  <polygon points="0 0, 7 3.5, 0 7" fill="#8f1d1d"/>
+                </marker>
+              </defs>
+              <!-- ZOC 中心敵軍與 6 個相鄰六角格 -->
+              <g transform="translate(205,95)">
+                <polygon points="28,0 14,24.25 -14,24.25 -28,0 -14,-24.25 14,-24.25" fill="#8f1d1d" stroke="#1c1814" stroke-width="2"/>
+                <text x="0" y="5" text-anchor="middle" fill="#f2e8cf" font-size="15" font-weight="bold">敵軍</text>
+                <!-- 6 個相鄰 ZOC 格 -->
+                <g fill="rgba(181,137,46,0.22)" stroke="#b5892e" stroke-width="1.8" stroke-dasharray="4,2">
+                  <polygon points="28,-48.5 14,-24.25 -14,-24.25 -28,-48.5 -14,-72.75 14,-72.75"/>
+                  <polygon points="70,-24.25 56,0 28,0 14,-24.25 28,-48.5 56,-48.5"/>
+                  <polygon points="70,24.25 56,48.5 28,48.5 14,24.25 28,0 56,0"/>
+                  <polygon points="28,48.5 14,72.75 -14,72.75 -28,48.5 -14,24.25 14,24.25"/>
+                  <polygon points="-14,24.25 -28,48.5 -56,48.5 -70,24.25 -56,0 -28,0"/>
+                  <polygon points="-14,-24.25 -28,0 -56,0 -70,-24.25 -56,-48.5 -28,-48.5"/>
+                </g>
+                <!-- 進入 ZOC 停步箭頭 -->
+                <rect x="-185" y="-17" width="62" height="34" rx="2" fill="#2d4a34" stroke="#1c1814" stroke-width="1.8"/>
+                <text x="-154" y="5" text-anchor="middle" fill="#f2e8cf" font-size="15" font-weight="bold">我軍</text>
+                <path d="M-120,0 L-58,0" stroke="#2d4a34" stroke-width="3" marker-end="url(#arrowGreen)"/>
+                <text x="-94" y="-12" text-anchor="middle" fill="#8f1d1d" font-size="14" font-weight="bold">ZOC 停步</text>
+              </g>
+              <!-- 地形 MP 對比 -->
+              <g transform="translate(328,18)">
+                <text x="0" y="16" fill="#1c1814" font-size="16" font-weight="bold">地形移動力消耗對比</text>
+                <rect x="0" y="28" width="110" height="124" fill="#dfd0b0" stroke="#594a36" stroke-width="1.5"/>
+                <line x1="14" y1="84" x2="96" y2="84" stroke="#1c1814" stroke-width="6"/>
+                <line x1="14" y1="84" x2="96" y2="84" stroke="#f7efe0" stroke-width="2.5"/>
+                <text x="55" y="54" text-anchor="middle" fill="#2d4a34" font-size="15" font-weight="bold">公路／鐵路</text>
+                <text x="55" y="128" text-anchor="middle" fill="#1c1814" font-size="16" font-weight="bold">1 MP</text>
+
+                <rect x="122" y="28" width="110" height="124" fill="rgba(176,134,78,0.32)" stroke="#594a36" stroke-width="1.5"/>
+                <text x="177" y="54" text-anchor="middle" fill="#594a36" font-size="15" font-weight="bold">高原 (+1防)</text>
+                <text x="177" y="128" text-anchor="middle" fill="#1c1814" font-size="16" font-weight="bold">2 MP</text>
+
+                <rect x="244" y="28" width="110" height="124" fill="rgba(128,92,58,0.42)" stroke="#594a36" stroke-width="1.5"/>
+                <text x="299" y="54" text-anchor="middle" fill="#8f1d1d" font-size="15" font-weight="bold">山地 (+2防)</text>
+                <text x="299" y="128" text-anchor="middle" fill="#1c1814" font-size="16" font-weight="bold">3 MP</text>
+              </g>
+            </svg>
+          </div>
+          <div class="dossier-subbox p-3.5 space-y-2">
+            <h4 class="font-typewriter font-bold text-[#2d3b32]">■ 補給線與工兵築路</h4>
+            <p>• 從己方控制城鎮出發，沿己方控制的<b>公路或鐵路</b>［義軍］或<b>小徑、公路或鐵路</b>［衣軍］連通，並向路網周圍延伸 <b>1 格</b>。</p>
+            <p>• 若路網被敵軍佔領格截斷，後方失去連通的部隊右上角即亮起<b>黃燈斷補</b>、<b>攻擊力減半</b>。義軍可由<b>工兵營</b>將相鄰小徑升級為公路。</p>
+            <svg viewBox="0 0 700 148" class="w-full h-auto block mt-3 mb-2 border border-[#594a36] bg-[#e6d9bc]" role="img" aria-label="補給線連通與截斷示意圖">
+              <line x1="95" y1="62" x2="605" y2="62" stroke="#1c1814" stroke-width="6"/>
+              <line x1="95" y1="62" x2="605" y2="62" stroke="#f7efe0" stroke-width="2.5"/>
+              <!-- 城鎮 -->
+              <polygon points="129,62 112,91.4 78,91.4 61,62 78,32.6 112,32.6" fill="#2d4a34" stroke="#1c1814" stroke-width="2"/>
+              <text x="95" y="67" text-anchor="middle" fill="#e8c670" font-size="14" font-weight="bold">己方城鎮</text>
+              <text x="95" y="124" text-anchor="middle" fill="#2d4a34" font-size="14" font-weight="bold">補給源</text>
+              <!-- 暢通延伸格 -->
+              <polygon points="299,62 282,91.4 248,91.4 231,62 248,32.6 282,32.6" fill="#d4dfd5" stroke="#2d4a34" stroke-width="2"/>
+              <circle cx="284" cy="44" r="6" fill="#16a34a" stroke="#1c1814" stroke-width="1.5"/>
+              <text x="265" y="67" text-anchor="middle" fill="#1c1814" font-size="14" font-weight="bold">綠燈暢通</text>
+              <text x="265" y="124" text-anchor="middle" fill="#2d4a34" font-size="14">路網相鄰 1 格</text>
+              <!-- 敵軍截斷格 -->
+              <polygon points="469,62 452,91.4 418,91.4 401,62 418,32.6 452,32.6" fill="#8f1d1d" stroke="#1c1814" stroke-width="2"/>
+              <text x="435" y="67" text-anchor="middle" fill="#f2e8cf" font-size="14" font-weight="bold">敵軍佔領</text>
+              <text x="435" y="124" text-anchor="middle" fill="#8f1d1d" font-size="14" font-weight="bold">截斷路網</text>
+              <!-- 斷補部隊 -->
+              <polygon points="639,62 622,91.4 588,91.4 571,62 588,32.6 622,32.6" fill="#ebd5d5" stroke="#8f1d1d" stroke-width="2" stroke-dasharray="4,2"/>
+              <circle cx="624" cy="44" r="6" fill="#eab308" stroke="#1c1814" stroke-width="1.5"/>
+              <text x="605" y="67" text-anchor="middle" fill="#8f1d1d" font-size="14" font-weight="bold">黃燈斷補</text>
+              <text x="605" y="124" text-anchor="middle" fill="#8f1d1d" font-size="14" font-weight="bold">攻擊力減半</text>
+            </svg>
+          </div>
+          <div class="dossier-subbox p-3.5">
+            <h4 class="font-typewriter font-bold text-[#2d3b32] mb-1">■ 城鎮地形</h4>
+            <p>• 城鎮移動消耗 1 MP、防禦 +2，並可作為補給線中繼；摩托化縱隊可經由城鎮格機動與進攻。</p>
+          </div>
+        </div>
+
+        <div id="man-crt" class="hidden space-y-2.5">
+          <p>進攻時計算「攻方總攻擊力 : 含地形防禦修正的守方總防禦力」之戰力比，擲 1D6 查表：</p>
+          <p>• 主攻格內仍可行動且可發動攻擊的部隊提供基礎攻擊力；目標周圍其他相鄰格的友軍提供圍攻加成，每支 +1 攻擊，最高 +3。</p>
+          <svg viewBox="0 0 700 176" class="w-full h-auto block mt-3 mb-2 border border-[#594a36] bg-[#e6d9bc]" role="img" aria-label="主攻格與圍攻加成示意圖">
+            <g transform="translate(175,88)">
+              <!-- 守軍中心格 -->
+              <polygon points="34,0 17,29.4 -17,29.4 -34,0 -17,-29.4 17,-29.4" fill="#8f1d1d" stroke="#1c1814" stroke-width="2"/>
+              <text x="0" y="5" text-anchor="middle" fill="#f2e8cf" font-size="14" font-weight="bold">守軍 +地形</text>
+              <!-- 左下主攻格 -->
+              <polygon points="-17,29.4 -34,58.8 -68,58.8 -85,29.4 -68,0 -34,0" fill="#2d4a34" stroke="#e8c670" stroke-width="2.5"/>
+              <text x="-51" y="34" text-anchor="middle" fill="#e8c670" font-size="14" font-weight="bold">主攻格</text>
+              <path d="M-36,22 L-16,10" stroke="#8f1d1d" stroke-width="3.5" marker-end="url(#arrowRed)"/>
+              <!-- 正上圍攻友軍 -->
+              <polygon points="34,-58.8 17,-29.4 -17,-29.4 -34,-58.8 -17,-88.2 17,-88.2" fill="#d4dfd5" stroke="#2d4a34" stroke-width="2"/>
+              <text x="0" y="-54" text-anchor="middle" fill="#2d4a34" font-size="14" font-weight="bold">友軍 +1</text>
+              <!-- 右下圍攻友軍 -->
+              <polygon points="85,29.4 68,58.8 34,58.8 17,29.4 34,0 68,0" fill="#d4dfd5" stroke="#2d4a34" stroke-width="2"/>
+              <text x="51" y="34" text-anchor="middle" fill="#2d4a34" font-size="14" font-weight="bold">友軍 +1</text>
+            </g>
+            <g transform="translate(295,30)">
+              <text x="0" y="16" fill="#1c1814" font-size="16" font-weight="bold">總攻戰力計算公式</text>
+              <text x="0" y="48" fill="#2d4a34" font-size="15" font-weight="bold">1. 主攻格：計入該格可行動友軍攻力</text>
+              <text x="0" y="80" fill="#b5892e" font-size="15" font-weight="bold">2. 圍攻加成：其餘相鄰友軍每格 +1（上限 +3）</text>
+              <text x="0" y="112" fill="#8f1d1d" font-size="15" font-weight="bold">3. 守方總防：部隊防禦 + 地形修正（毒氣 -1）</text>
+            </g>
+          </svg>
+          <p id="manual-crt-gas-rule">• 使用芥子毒氣支援時，CRT 中的「守退 DR」格會以淡綠色標示並升級為「守殲 DE」。毒氣覆蓋格也會套用此效果。</p>
+          <table class="w-full border-collapse border-2 border-[#2d3b32] text-center font-typewriter text-sm">
+            <thead class="bg-[#2d3b32] text-[#e8c670]">
+              <tr>
+                <th class="border border-[#5a6e60] p-2">骰點 \ 戰力比</th>
+                <th class="border border-[#5a6e60] p-2">1:2 以下</th>
+                <th class="border border-[#5a6e60] p-2">1:1</th>
+                <th class="border border-[#5a6e60] p-2">2:1</th>
+                <th class="border border-[#5a6e60] p-2">3:1</th>
+                <th class="border border-[#5a6e60] p-2">4:1 以上</th>
+              </tr>
+            </thead>
+            <tbody class="bg-[#dfd0b0]">
+              <tr><td class="border border-[#594a36] p-1.5 font-bold">1</td><td class="border border-[#594a36] p-1.5 text-[#8f1d1d] font-bold">攻方潰滅</td><td class="border border-[#594a36] p-1.5 text-[#8f1d1d]">攻方退卻</td><td class="border border-[#594a36] p-1.5 text-[#8f1d1d]">攻方退卻</td><td class="border border-[#594a36] p-1.5">雙方交換</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34]">守方退卻</td></tr>
+              <tr><td class="border border-[#594a36] p-1.5 font-bold">2</td><td class="border border-[#594a36] p-1.5 text-[#8f1d1d]">攻方退卻</td><td class="border border-[#594a36] p-1.5 text-[#8f1d1d]">攻方退卻</td><td class="border border-[#594a36] p-1.5">雙方交換</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34]">守方退卻</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34]">守方退卻</td></tr>
+              <tr><td class="border border-[#594a36] p-1.5 font-bold">3</td><td class="border border-[#594a36] p-1.5 text-[#8f1d1d]">攻方退卻</td><td class="border border-[#594a36] p-1.5">雙方交換</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34]">守方退卻</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34]">守方退卻</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34] font-bold">守方殲滅</td></tr>
+              <tr><td class="border border-[#594a36] p-1.5 font-bold">4</td><td class="border border-[#594a36] p-1.5">雙方交換</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34]">守方退卻</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34]">守方退卻</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34] font-bold">守方殲滅</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34] font-bold">守方殲滅</td></tr>
+              <tr><td class="border border-[#594a36] p-1.5 font-bold">5</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34]">守方退卻</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34]">守方退卻</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34] font-bold">守方殲滅</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34] font-bold">守方殲滅</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34] font-bold">守方殲滅</td></tr>
+              <tr><td class="border border-[#594a36] p-1.5 font-bold">6</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34]">守方退卻</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34] font-bold">守方殲滅</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34] font-bold">守方殲滅</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34] font-bold">守方殲滅</td><td class="border border-[#594a36] p-1.5 text-[#2d4a34] font-bold">守方殲滅</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="man-nato" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-sm">
+          <div class="nato-reference-card bg-[#d4dfd5] p-3 border border-[#2d3b32]">
+            <div class="nato-guide-counter">
+              <img src="./assets/counters/counter_italy.svg" alt="" class="nato-guide-base">
+              <img src="./assets/nato/nato_inf.svg" alt="步兵師軍標" class="nato-guide-symbol">
+            </div>
+            <div><b>🇮🇹 步兵師</b><div>前線陣地攻防主力，依草原／荒漠 1 MP、高原 2 MP、山地 3 MP 的標準地形消耗機動，須透過己方公路或鐵路維持補給。</div></div>
+          </div>
+          <div class="nato-reference-card bg-[#d4dfd5] p-3 border border-[#2d3b32]">
+            <div class="nato-guide-counter">
+              <img src="./assets/counters/counter_italy.svg" alt="" class="nato-guide-base">
+              <img src="./assets/nato/nato_ccnn.svg" alt="准軍事民兵師軍標" class="nato-guide-symbol">
+            </div>
+            <div><b>🇮🇹 准軍事民兵師</b><div>納入野戰編制的法西斯黑衫軍主力，進攻火力不俗但防禦較弱，適用標準地形消耗與公路補給規則。</div></div>
+          </div>
+          <div class="nato-reference-card bg-[#d4dfd5] p-3 border border-[#2d3b32]">
+            <div class="flex shrink-0 gap-1">
+              <div class="nato-guide-counter is-compact">
+                <img src="./assets/counters/counter_italy.svg" alt="" class="nato-guide-base">
+                <img src="./assets/nato/nato_alp.svg" alt="阿爾卑斯山地師軍標" class="nato-guide-symbol">
+              </div>
+              <div class="nato-guide-counter is-compact">
+                <img src="./assets/counters/counter_italy.svg" alt="" class="nato-guide-base">
+                <img src="./assets/nato/nato_col.svg" alt="殖民地步兵師軍標" class="nato-guide-symbol">
+              </div>
+            </div>
+            <div><b>🇮🇹 山地師</b><div>包含本土阿爾卑斯山地師與殖民地步兵師；具備極佳的山地與荒漠適應力，全地形移動僅耗 1 MP，且不受斷補攻擊減半懲罰。</div></div>
+          </div>
+          <div class="nato-reference-card bg-[#d4dfd5] p-3 border border-[#2d3b32]">
+            <div class="nato-guide-counter">
+              <img src="./assets/counters/counter_italy.svg" alt="" class="nato-guide-base">
+              <img src="./assets/nato/nato_mot.svg" alt="摩托化步兵軍標" class="nato-guide-symbol">
+            </div>
+            <div><b>🇮🇹 摩托化步兵</b><div>高機動輪式機械化突擊縱隊，具備全場最高機動力，但僅限沿公路、鐵路與城鎮格機動及發動進攻。</div></div>
+          </div>
+          <div class="nato-reference-card bg-[#d4dfd5] p-3 border border-[#2d3b32]">
+            <div class="nato-guide-counter">
+              <img src="./assets/counters/counter_italy.svg" alt="" class="nato-guide-base">
+              <img src="./assets/nato/nato_eng.svg" alt="野戰工兵軍標" class="nato-guide-symbol">
+            </div>
+            <div><b>🇮🇹 野戰工兵</b><div>後方工程支援部隊，可耗費 2 LP 與當回合移動力，將相鄰小徑修築為公路以延伸補給線。</div></div>
+          </div>
+          <div class="nato-reference-card bg-[#ebd5d5] p-3 border border-[#8f1d1d]">
+            <div class="nato-guide-counter">
+              <img src="./assets/counters/counter_ethiopia.svg" alt="" class="nato-guide-base">
+              <img src="./assets/nato/nato_grd.svg" alt="近衛步兵師軍標" class="nato-guide-symbol">
+            </div>
+            <div><b>🇪🇹 近衛步兵師</b><div>接受現代化歐式訓練的帝國精銳主力，配備機槍與山砲，擅長險峻地形作戰，全地形移動僅耗 1 MP。</div></div>
+          </div>
+          <div class="nato-reference-card bg-[#ebd5d5] p-3 border border-[#8f1d1d]">
+            <div class="nato-guide-counter">
+              <img src="./assets/counters/counter_ethiopia.svg" alt="" class="nato-guide-base">
+              <img src="./assets/nato/nato_lvy.svg" alt="非正規步兵軍標" class="nato-guide-symbol">
+            </div>
+            <div><b>🇪🇹 非正規步兵</b><div>衣索比亞各省地方領主徵召的大軍，人數眾多但缺乏重武器，須依託小徑補給與高原、山地地形防禦。</div></div>
+          </div>
+          <div class="nato-reference-card bg-[#ebd5d5] p-3 border border-[#8f1d1d]">
+            <div class="nato-guide-counter">
+              <img src="./assets/counters/counter_ethiopia.svg" alt="" class="nato-guide-base">
+              <img src="./assets/nato/nato_rec.svg" alt="游擊部隊軍標" class="nato-guide-symbol">
+            </div>
+            <div><b>🇪🇹 游擊部隊</b><div>滲透後方的小股非正規武裝，全地形移動僅耗 1 MP 且不受斷補懲罰，可耗費 1 點爆破配額摧毀相鄰義軍公路。</div></div>
+          </div>
+        </div>
+
+        <div id="man-war" class="hidden space-y-3">
+          <div class="dossier-subbox p-3.5">
+            <h4 class="font-typewriter font-bold text-[#8f1d1d] mb-1">■ 戰爭態勢升級</h4>
+            <p>• 劇本開始時為 Lv.1；進入第 4、7、10、13 回合時各升 1 級，義軍每次使用芥子毒氣支援後也升 1 級。</p>
+            <p>• 每次升級會記入前線野戰電報。Lv.10 代表全面國際干預，戰役立即由衣索比亞帝國取得戰略勝利。</p>
+          </div>
+          <div class="dossier-subbox p-3.5 space-y-1">
+            <h4 class="font-typewriter font-bold text-[#2d3b32] mb-1">■ 階梯效果</h4>
+            <p>• Lv.1–3：無額外效果。</p>
+            <p>• Lv.4–5：義大利每回合工程補給點補充減少 1 LP。</p>
+            <p>• Lv.6–7：衣軍補給可延伸至路網 2 格內的己方控制格；每逢偶數回合額外獲得 1 點游擊爆破配額。</p>
+            <p>• Lv.8–9：義大利每回合工程補給點再減少 1 LP，且毒氣配額不再自動補充。</p>
+            <svg viewBox="0 0 700 112" class="w-full h-auto block mt-3 mb-2 border border-[#594a36] bg-[#e6d9bc]" role="img" aria-label="戰爭態勢里程碑橫條圖">
+              <line x1="70" y1="42" x2="630" y2="42" stroke="#594a36" stroke-width="5"/>
+              <g text-anchor="middle" font-size="14" font-weight="bold">
+                <circle cx="70" cy="42" r="22" fill="#2d4a34" stroke="#1c1814" stroke-width="2"/>
+                <text x="70" y="47" fill="#e8c670" font-size="15">Lv.1</text>
+                <text x="70" y="88" fill="#1c1814">開戰初始</text>
+
+                <circle cx="210" cy="42" r="22" fill="#b5892e" stroke="#1c1814" stroke-width="2"/>
+                <text x="210" y="47" fill="#1c1814" font-size="15">Lv.4</text>
+                <text x="210" y="88" fill="#1c1814">義軍 -1 LP</text>
+
+                <circle cx="350" cy="42" r="22" fill="#b5892e" stroke="#1c1814" stroke-width="2"/>
+                <text x="350" y="47" fill="#1c1814" font-size="15">Lv.6</text>
+                <text x="350" y="88" fill="#2d4a34">衣援/爆破</text>
+
+                <circle cx="490" cy="42" r="22" fill="#8f1d1d" stroke="#1c1814" stroke-width="2"/>
+                <text x="490" y="47" fill="#f2e8cf" font-size="15">Lv.8</text>
+                <text x="490" y="88" fill="#8f1d1d">禁毒氣補充</text>
+
+                <circle cx="630" cy="42" r="24" fill="#8f1d1d" stroke="#e8c670" stroke-width="3"/>
+                <text x="630" y="47" fill="#e8c670" font-size="15">Lv.10</text>
+                <text x="630" y="88" fill="#8f1d1d">國際干預終戰</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div id="man-gas" class="hidden space-y-3">
+          <div class="dossier-subbox p-3.5 space-y-1">
+            <h4 class="font-typewriter font-bold text-[#8f1d1d] mb-1">■ 芥子毒氣支援配額</h4>
+            <p>• 劇本開局有 2 枚毒氣配額；每個義大利回合自動補充 1 枚，上限 3 枚。</p>
+            <p>• 戰爭態勢達 Lv.8 後停止每回合補充；已持有的配額仍可使用。</p>
+            <p>• 交戰前勾選支援，消耗 1 枚並增加 +2 攻擊；戰後毒氣覆蓋目標格 2 回合。</p>
+          </div>
+          <div class="dossier-subbox p-3.5 space-y-1">
+            <h4 class="font-typewriter font-bold text-[#2d3b32] mb-1">■ 毒氣地形與戰鬥效果</h4>
+            <p>• 毒氣覆蓋格的地形防禦修正固定為 -1，取代原地形修正；守方總防禦力最低為 1。</p>
+            <p>• 停留在毒氣格的部隊攻擊力 -1，最低為 1。</p>
+            <p>• 在毒氣格防守時，CRT 的「守退 DR」升級為「守殲 DE」；使用毒氣支援時亦會將 DR 升級為 DE。</p>
+            <svg viewBox="0 0 700 116" class="w-full h-auto block mt-3 mb-2 border border-[#594a36] bg-[#e6d9bc]" role="img" aria-label="毒氣覆蓋格效果示意圖">
+              <g transform="translate(95,58)">
+                <polygon points="42,0 21,36.4 -21,36.4 -42,0 -21,-36.4 21,-36.4" fill="#c7e3c0" stroke="#2d4a34" stroke-width="2.5"/>
+                <text x="0" y="-5" text-anchor="middle" fill="#1c3b1e" font-size="15" font-weight="bold">毒氣覆蓋</text>
+                <text x="0" y="16" text-anchor="middle" fill="#8f1d1d" font-size="14" font-weight="bold">持續 2 回合</text>
+              </g>
+              <text x="165" y="42" fill="#2d4a34" font-size="15" font-weight="bold">• 地形與停留懲罰：攻防皆 -1（取代原地形防禦）</text>
+              <text x="165" y="78" fill="#8f1d1d" font-size="15" font-weight="bold">• 致命殺傷升級：CRT 結果「守退 DR」強制升級為「守殲 DE」</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 彈窗 3：歷史百科                                                       -->
+  <!-- ===================================================================== -->
+  <div id="modal-encyclopedia" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+    <div class="encyclopedia-dialog dossier-panel border-4 border-[#1c1814] w-full max-w-[1040px] h-[84vh] min-h-0 p-5 text-[#1c1814] flex flex-col overflow-hidden">
+      <div class="shrink-0 flex items-center justify-between border-b-2 border-[#2d3b32] pb-3 mb-3">
+        <div>
+          <h2 class="font-special text-2xl">歷史百科檔案</h2>
+          <p class="font-typewriter text-xs text-[#594a36] mt-1">地理、國境、城鎮、人物、部隊與交通路線索引</p>
+        </div>
+        <button onclick="closeModal('modal-encyclopedia')" class="mil-btn px-4 py-1.5 bg-[#2d3b32] text-[#f2e8cf] font-typewriter text-sm font-bold">關閉</button>
+      </div>
+      <div class="shrink-0 flex flex-wrap items-center justify-between gap-2 mb-3">
+        <div id="encyclopedia-categories" class="flex flex-wrap gap-1.5"></div>
+        <input id="encyclopedia-search-input" type="search" placeholder="搜尋條目或內文關鍵字..." oninput="onEncyclopediaSearch(this.value)" class="w-full sm:w-56 px-2.5 py-1 bg-[#dfd0b0] border border-[#594a36] text-[#1c1814] placeholder-[#594a36] font-typewriter text-xs focus:outline-none focus:border-[#2d3b32]" />
+      </div>
+      <label id="encyclopedia-person-scope-control" class="hidden shrink-0 flex items-center gap-2 font-typewriter text-xs font-bold mb-2">
+        <input id="encyclopedia-all-era-people" type="checkbox" onchange="toggleAllEraPeople(this.checked)" class="accent-[#2d3b32]" />
+        顯示全時代人物
+      </label>
+      <div id="encyclopedia-layout" class="grid grid-cols-1 grid-rows-2 md:grid-rows-1 md:grid-cols-[minmax(190px,0.8fr)_2fr] gap-3 flex-1 min-h-0 overflow-hidden">
+        <div id="encyclopedia-list" class="encyclopedia-scroll-pane border-2 border-[#594a36] bg-[#c4b087] p-1.5 space-y-1"></div>
+        <article class="encyclopedia-scroll-pane border-2 border-[#2d3b32] bg-[#dfd0b0] p-4">
+          <h3 id="encyclopedia-entry-title" class="font-special text-xl text-[#1c1814] border-b border-[#8c7853] pb-2 mb-3">選擇百科條目</h3>
+          <p id="encyclopedia-entry-subtitle" class="font-typewriter font-bold text-sm text-[#594a36] mb-3"></p>
+          <div id="encyclopedia-entry-content" class="space-y-2.5 text-sm leading-relaxed"></div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 彈窗 4：戰役勝負結算畫面                                                -->
+  <!-- ===================================================================== -->
+  <div id="modal-gameover" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4">
+    <div class="dossier-panel border-4 border-[#b5892e] max-w-lg w-full p-6 text-center text-[#1c1814]">
+      <div id="go-badge" class="inline-block px-4 py-1 font-typewriter text-sm font-bold bg-[#8f1d1d] text-[#f2e8cf] border border-[#1c1814] mb-3">戰役終局</div>
+      <h2 id="go-title" class="font-special text-2xl sm:text-3xl mb-3">戰役結算</h2>
+      <p id="go-desc" class="text-base text-[#2b241c] leading-relaxed mb-6">結算說明</p>
+      <button onclick="closeModal('modal-gameover'); openModal('modal-scenario');" class="mil-btn px-6 py-3 bg-[#2d3b32] text-[#e8c670] font-typewriter font-bold text-base">
+        返回戰役劇本選單
+      </button>
+    </div>
+  </div>
+
+  <!-- 共用資料、部隊類型、劇本資料包，最後載入核心邏輯與渲染 -->
+  <script src="data.js"></script>
+  <script src="units_data.js"></script>
+  <script src="scenarios/scenario_Second_Italo-Ethiopian_War_1935.js"></script>
+  <script src="scenarios/scenario_tutorial.js"></script>
+  <script src="encyclopedia/shared/landmarks/lake_tana.js"></script>
+  <script src="encyclopedia/shared/landmarks/lake_rudolf.js"></script>
+  <script src="encyclopedia/shared/landmarks/lake_victoria.js"></script>
+  <script src="encyclopedia/shared/landmarks/bab_el_mandeb.js"></script>
+  <script src="encyclopedia/shared/landmarks/sea_red.js"></script>
+  <script src="encyclopedia/shared/landmarks/sea_indian.js"></script>
+  <script src="encyclopedia/shared/countries/country_ETH.js"></script>
+  <script src="encyclopedia/shared/countries/country_ERI.js"></script>
+  <script src="encyclopedia/shared/countries/country_SOM_IT.js"></script>
+  <script src="encyclopedia/shared/countries/country_SOM_BR.js"></script>
+  <script src="encyclopedia/shared/countries/country_SOM_FR.js"></script>
+  <script src="encyclopedia/shared/countries/country_SUD.js"></script>
+  <script src="encyclopedia/shared/countries/country_KEN.js"></script>
+  <script src="encyclopedia/shared/countries/country_UGA.js"></script>
+  <script src="encyclopedia/shared/countries/country_SAU.js"></script>
+  <script src="encyclopedia/shared/countries/country_YEM.js"></script>
+  <script src="encyclopedia/shared/countries/country_ADE.js"></script>
+  <script src="encyclopedia/shared/cities/city_addis_ababa.js"></script>
+  <script src="encyclopedia/shared/cities/city_asmara.js"></script>
+  <script src="encyclopedia/shared/cities/city_massawa.js"></script>
+  <script src="encyclopedia/shared/cities/city_agordat.js"></script>
+  <script src="encyclopedia/shared/cities/city_adwa.js"></script>
+  <script src="encyclopedia/shared/cities/city_gondar.js"></script>
+  <script src="encyclopedia/shared/cities/city_dessie.js"></script>
+  <script src="encyclopedia/shared/cities/city_harar.js"></script>
+  <script src="encyclopedia/shared/cities/city_gorrahei.js"></script>
+  <script src="encyclopedia/shared/cities/city_mogadishu.js"></script>
+  <script src="encyclopedia/shared/cities/city_djibouti.js"></script>
+  <script src="encyclopedia/shared/cities/city_berbera.js"></script>
+  <script src="encyclopedia/shared/cities/city_sennar.js"></script>
+  <script src="encyclopedia/shared/cities/city_kassala.js"></script>
+  <script src="encyclopedia/shared/cities/city_jizan.js"></script>
+  <script src="encyclopedia/shared/cities/city_sanaa.js"></script>
+  <script src="encyclopedia/shared/cities/city_aden.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_u1.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_u2.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_u3.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_u4.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_u5.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_u6.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_u7.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_u8.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_u9.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_u10.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_e1.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_e2.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_e3.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_e4.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_e5.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_e6.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_e7.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_e8.js"></script>
+  <script src="encyclopedia/scenario_1935/units/unit_e9.js"></script>
+  <script src="encyclopedia/scenario_1935/routes/route_eritrea_rail.js"></script>
+  <script src="encyclopedia/scenario_1935/routes/route_franco_ethiopian_rail.js"></script>
+  <script src="encyclopedia/scenario_1935/routes/route_imperial_roads.js"></script>
+  <script src="encyclopedia/scenario_1935/routes/route_highland_ogaden_trails.js"></script>
+  <script src="encyclopedia/shared/events/event_battle_of_adwa.js"></script>
+  <script src="encyclopedia/scenario_1935/events/event_walwal.js"></script>
+  <script src="encyclopedia/scenario_1935/events/event_league_sanctions.js"></script>
+  <script src="encyclopedia/scenario_1935/events/event_hoare_laval.js"></script>
+  <script src="encyclopedia/scenario_1935/events/event_christmas_offensive.js"></script>
+  <script src="encyclopedia/scenario_1935/events/event_chemical_warfare.js"></script>
+  <script src="encyclopedia/scenario_1935/events/event_maychew.js"></script>
+  <script src="encyclopedia/scenario_1935/events/event_geneva_speech.js"></script>
+  <script src="encyclopedia/shared/figures/fig_haile_selassie.js"></script>
+  <script src="encyclopedia/shared/figures/fig_mussolini.js"></script>
+  <script src="encyclopedia/shared/figures/fig_menelik_ii.js"></script>
+  <script src="encyclopedia/shared/figures/fig_yohannes_iv.js"></script>
+  <script src="encyclopedia/shared/figures/fig_pius_xi.js"></script>
+  <script src="encyclopedia/shared/figures/fig_leo_xiii.js"></script>
+  <script src="encyclopedia/shared/figures/fig_de_bono.js"></script>
+  <script src="encyclopedia/shared/figures/fig_badoglio.js"></script>
+  <script src="encyclopedia/shared/figures/fig_graziani.js"></script>
+  <script src="encyclopedia/shared/figures/fig_baratieri.js"></script>
+  <script src="encyclopedia/shared/figures/fig_baldissera.js"></script>
+  <script src="encyclopedia/shared/figures/fig_ras_seyoum.js"></script>
+  <script src="encyclopedia/shared/figures/fig_ras_mulugeta.js"></script>
+  <script src="encyclopedia/shared/figures/fig_ras_imru.js"></script>
+  <script src="encyclopedia/shared/figures/fig_ras_desta.js"></script>
+  <script src="encyclopedia/shared/figures/fig_ras_alula.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

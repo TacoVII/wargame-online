@@ -1,0 +1,344 @@
+/* ===================================================================== */
+/* 復古羊皮紙軍用檔案風與全直角強制規範 (ZERO-RADIUS MILITARY DOSSIER)    */
+/* ===================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  user-select: none;
+  border-radius: 0px !important;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #222222;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.018) 0px, rgba(255,255,255,0.018) 1px, transparent 1px, transparent 16px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 16px);
+  color: #1c1814;
+  font-family: 'Libre Baskerville', 'Noto Serif TC', serif;
+  font-size: 16px;
+}
+
+body .text-xs {
+  font-size: 14px;
+}
+
+body .text-sm {
+  font-size: 16px;
+}
+
+body [class~="text-[11px]"] {
+  font-size: 14px;
+}
+
+body [class~="text-[13px]"],
+body [class~="text-[14px]"] {
+  font-size: 15px;
+}
+
+body [class~="text-[15px]"] {
+  font-size: 16px;
+}
+
+.font-typewriter {
+  font-family: 'Courier Prime', 'Special Elite', 'Noto Serif TC', monospace;
+}
+
+.font-special {
+  font-family: 'Special Elite', 'Courier Prime', 'Noto Serif TC', serif;
+}
+
+.font-serif-classic {
+  font-family: 'Libre Baskerville', 'Noto Serif TC', serif;
+}
+
+/* 雙線木框與軍規銅框面板 */
+.dossier-panel {
+  background-color: #d4c39f;
+  border: 2px solid #2d3b32;
+  box-shadow: inset 0 0 0 1px #8c7853, 0 6px 18px rgba(0, 0, 0, 0.7);
+}
+
+#modal-encyclopedia .encyclopedia-dialog {
+  width: min(100%, 1040px);
+  height: 84vh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#modal-encyclopedia #encyclopedia-layout {
+  min-height: 0;
+  overflow: hidden;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+#modal-encyclopedia .encyclopedia-scroll-pane {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  #modal-encyclopedia #encyclopedia-layout {
+    grid-template-rows: minmax(0, 1fr);
+  }
+}
+
+#modal-manual .manual-dialog {
+  width: min(100%, 896px);
+  height: 82vh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#modal-manual .manual-content {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.war-escalation-cell {
+  display: flex;
+  min-width: 0;
+  min-height: 26px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #594a36;
+  background: #d4c39f;
+  color: #1c1814;
+  font-family: 'Courier Prime', 'Special Elite', 'Noto Serif TC', monospace;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.war-escalation-cell.is-reached {
+  background: #2d3b32;
+  color: #e8c670;
+}
+
+.war-escalation-cell.is-final {
+  border: 2px double #1c1814;
+  background: #e8c670;
+}
+
+.war-escalation-cell.is-current {
+  border: 2px solid #1c1814;
+  background: #8f1d1d;
+  box-shadow: inset 0 0 0 1px #e8c670;
+  color: #f2e8cf;
+}
+
+#hover-hex-def.gas-warning {
+  border-color: #2d3b32;
+  background-color: #c7e3c0;
+  color: #1c3b1e;
+}
+
+.dossier-subbox {
+  background-color: #dfd0b0;
+  border: 1px solid #594a36;
+  box-shadow: inset 0 0 0 1px rgba(255, 248, 231, 0.35);
+}
+
+/* 厚木塊／機械拉桿立體按鈕 */
+.mil-btn {
+  border: 2px solid #1c1814;
+  box-shadow: 2px 2px 0px #1c1814;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.12s ease;
+}
+
+.mil-btn:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.mil-btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px #1c1814;
+}
+
+.mil-btn:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 檔案夾分頁頁籤 */
+.folder-tab {
+  border-top: 2px solid #2d3b32;
+  border-left: 2px solid #2d3b32;
+  border-right: 2px solid #2d3b32;
+  border-bottom: none;
+  position: relative;
+  top: 2px;
+}
+
+/* 中央兵棋圖版外框 */
+#map-viewport-frame {
+  width: 100%;
+  height: 100%;
+  flex: none;
+  border: 3px solid #2d3b32;
+  box-shadow:
+    0 0 0 1px #b5892e,
+    0 14px 36px rgba(0, 0, 0, 0.85);
+  background-color: #d4c39f;
+}
+
+/* 右側欄底部圖例面板 */
+#fixed-legend-box {
+  flex-shrink: 0;
+  width: auto;
+}
+
+.route-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.route-legend-item svg {
+  display: block;
+  flex: none;
+  width: 36px;
+  height: 12px;
+}
+
+.nato-reference-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nato-guide-counter {
+  position: relative;
+  flex-shrink: 0;
+  width: 62px;
+  height: 62px;
+}
+
+.nato-guide-counter.is-compact {
+  width: 54px;
+  height: 54px;
+}
+
+.nato-guide-counter > .nato-guide-base {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.nato-guide-symbol {
+  position: absolute;
+  z-index: 2;
+  left: 11px;
+  top: 15px;
+  width: 36px;
+  height: 23px;
+}
+
+.nato-guide-counter.is-compact .nato-guide-symbol {
+  left: 9.5px;
+  top: 13px;
+  width: 32px;
+  height: 20px;
+}
+
+.turn-track-grid {
+  display: grid;
+  gap: 4px;
+}
+
+.turn-track-cell {
+  display: flex;
+  min-width: 0;
+  min-height: 26px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #594a36;
+  background: #d4c39f;
+  color: #1c1814;
+  font-family: 'Courier Prime', 'Special Elite', 'Noto Serif TC', monospace;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.turn-track-cell.is-final {
+  border: 2px double #1c1814;
+  background: #e8c670;
+}
+
+.turn-track-cell.is-current {
+  border: 2px solid #1c1814;
+  background: #8f1d1d;
+  box-shadow: inset 0 0 0 1px #e8c670;
+  color: #f2e8cf;
+}
+
+.turn-track-key {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border: 1px solid #1c1814;
+  background: #8f1d1d;
+  box-shadow: inset 0 0 0 1px #e8c670;
+}
+
+.turn-track-key.final {
+  background: #e8c670;
+}
+
+#chk-fac-italy,
+#chk-fac-ethiopia {
+  white-space: nowrap;
+}
+
+@keyframes tutorialPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 2px #b5892e, 0 0 8px rgba(143, 29, 29, 0.55);
+    border-color: #e8c670;
+  }
+  50% {
+    box-shadow: 0 0 0 4px #8f1d1d, 0 0 16px rgba(232, 198, 112, 0.85);
+    border-color: #fff099;
+  }
+}
+
+.tutorial-btn-pulse {
+  animation: tutorialPulse 1.3s ease-in-out infinite;
+  border-width: 2px !important;
+}
+
+/* 1D6 實體骰子翻滾動畫 */
+.die-perspective {
+  perspective: 280px;
+}
+
+@keyframes dieTumble {
+  0%   { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateY(0) scale(0.96); }
+  25%  { transform: rotateX(110deg) rotateY(-80deg) rotateZ(-12deg) translateY(-10px) scale(1.06); }
+  50%  { transform: rotateX(210deg) rotateY(130deg) rotateZ(10deg) translateY(0) scale(1.08); }
+  75%  { transform: rotateX(300deg) rotateY(230deg) rotateZ(-7deg) translateY(-5px) scale(1.03); }
+  100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(0deg) translateY(0) scale(1); }
+}
+
+.die-rolling {
+  animation: dieTumble 0.32s infinite ease-in-out;
+}
+
+/* 直角卷軸樣式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #c4b087;
+  border-left: 1px solid #594a36;
+}
+::-webkit-scrollbar-thumb {
+  background: #2d3b32;
+}
